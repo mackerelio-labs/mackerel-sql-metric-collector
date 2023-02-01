@@ -1,0 +1,34 @@
+---
+project_name: mackerel-sql-metric-collector
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - main: ./cmd/mackerel-sql-metric-collector/
+    binary: mackerel-sql-metric-collector
+    ldflags:
+      - -s -w
+      - -X main.revision={{.ShortCommit}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+archives:
+  - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    replacements:
+      darwin: darwin
+      linux: linux
+      windows: windows
+      386: i386
+      amd64: x86_64
+    format_overrides:
+      - goos: windows
+        format: zip
+release:
+  prerelease: auto
+  draft: true
+changelog:
+  use: github
+  sort: asc
