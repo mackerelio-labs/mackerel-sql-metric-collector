@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"sync"
 
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/fetcher/driver"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/fetcher/driver"
 )
 
 var (

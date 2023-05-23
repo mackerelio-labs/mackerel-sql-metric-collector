@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"testing"
 
-	collector "github.com/hatena/mackerel-sql-metric-collector"
-	"github.com/hatena/mackerel-sql-metric-collector/exporter/stdout"
+	collector "github.com/mackerelio-labs/mackerel-sql-metric-collector"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/exporter/stdout"
 )
 
 type urlValue url.URL

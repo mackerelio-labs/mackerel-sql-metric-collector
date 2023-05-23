@@ -3,8 +3,8 @@ package cli
 import (
 	"context"
 
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor"
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/option"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/option"
 )
 
 const (
