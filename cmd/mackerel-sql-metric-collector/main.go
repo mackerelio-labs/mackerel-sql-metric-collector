@@ -10,14 +10,15 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/go-logr/stdr"
-	collector "github.com/hatena/mackerel-sql-metric-collector"
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor"
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor/driver/cli"
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor/driver/lambda"
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/option"
-	"github.com/hatena/mackerel-sql-metric-collector/exporter"
-	"github.com/hatena/mackerel-sql-metric-collector/exporter/mackerel"
-	"github.com/hatena/mackerel-sql-metric-collector/exporter/stdout"
+
+	collector "github.com/mackerelio-labs/mackerel-sql-metric-collector"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor/driver/cli"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor/driver/lambda"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/option"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/exporter"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/exporter/mackerel"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/exporter/stdout"
 )
 
 var revision string

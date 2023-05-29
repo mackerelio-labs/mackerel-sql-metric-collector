@@ -8,9 +8,9 @@ import (
 
 	"github.com/go-logr/logr"
 	_ "github.com/go-sql-driver/mysql" // MySQL driver
-	"github.com/hatena/mackerel-sql-metric-collector/exporter"
-	"github.com/hatena/mackerel-sql-metric-collector/query"
-	_ "github.com/lib/pq"           // PostgreSQL driver
+	_ "github.com/lib/pq"              // PostgreSQL driver
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/exporter"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/query"
 	_ "github.com/mattn/go-sqlite3" // SQLite3 driver
 	_ "github.com/speee/go-athena"  // AWS Athena driver
 	"golang.org/x/sync/errgroup"

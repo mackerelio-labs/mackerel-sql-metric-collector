@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor/driver"
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/option"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/executor/driver"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/option"
 )
 
 var (

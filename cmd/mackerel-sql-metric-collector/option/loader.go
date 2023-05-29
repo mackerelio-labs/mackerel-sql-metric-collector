@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/fetcher"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/fetcher"
 )
 
 // Load resolves all indirect values in c.

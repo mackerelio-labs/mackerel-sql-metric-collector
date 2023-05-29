@@ -1,4 +1,4 @@
-module github.com/hatena/mackerel-sql-metric-collector
+module github.com/mackerelio-labs/mackerel-sql-metric-collector
 
 go 1.19
 

@@ -8,9 +8,9 @@ import (
 	"reflect"
 	"strings"
 
-	collector "github.com/hatena/mackerel-sql-metric-collector"
-	"github.com/hatena/mackerel-sql-metric-collector/exporter/mackerel"
-	"github.com/hatena/mackerel-sql-metric-collector/exporter/stdout"
+	collector "github.com/mackerelio-labs/mackerel-sql-metric-collector"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/exporter/mackerel"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/exporter/stdout"
 )
 
 // FIXME: It contains expected values to usage tag of both LogFormat and LogLevel.

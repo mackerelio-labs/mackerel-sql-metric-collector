@@ -6,9 +6,9 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/hatena/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/fetcher"
-	"github.com/hatena/mackerel-sql-metric-collector/query"
-	"github.com/hatena/mackerel-sql-metric-collector/query/valuekey"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/fetcher"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/query"
+	"github.com/mackerelio-labs/mackerel-sql-metric-collector/query/valuekey"
 	"gopkg.in/yaml.v2"
 )
 
