@@ -96,7 +96,7 @@ func detectExecutorName() string {
 		return e
 
 	}
-	if os.Getenv("AWS_EXECUTION_ENV") != "" {
+	if os.Getenv("AWS_EXECUTION_ENV") != "" || os.Getenv("AWS_LAMBDA_RUNTIME_API") != "" {
 		return lambda.Name
 
 	}
