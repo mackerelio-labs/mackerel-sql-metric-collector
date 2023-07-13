@@ -54,3 +54,10 @@ $(OUTPUT_DIR)/lambda.zip: $(OUTPUT_DIR)/linux/$(NAME)
 
 .PHONY: lambda-artifact
 lambda-artifact: $(OUTPUT_DIR)/lambda.zip
+
+$(OUTPUT_DIR)/bootstrap.zip: $(OUTPUT_DIR)/linux/$(NAME)
+	mv $(OUTPUT_DIR)/linux/$(NAME) $(OUTPUT_DIR)/linux/bootstrap
+	zip -j $(OUTPUT_DIR)/bootstrap.zip $(OUTPUT_DIR)/linux/bootstrap
+
+.PHONY: lambda-bootstrap-artifact
+labmda-boostrap-artifact: $(OUTPUT_DIR)/bootstrap.zip
