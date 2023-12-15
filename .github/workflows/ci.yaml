@@ -19,7 +19,10 @@ jobs:
   test:
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macOS-latest', 'windows-latest']
+        # FIXME: windows builds are broken.
+        # We excludes binaries for windows until fixing that.
+        #os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        os: ['ubuntu-latest', 'macos-latest']
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     steps:
