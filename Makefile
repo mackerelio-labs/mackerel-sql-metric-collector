@@ -11,7 +11,7 @@ BUILD_LDFLAGS := "-X main.revision=$(GIT_REVISION)"
 
 SOURCES = $(shell find . -type f -name '*.go')
 
-all: test $(OUTPUT_DIR)/$(NAME)
+all: $(OUTPUT_DIR)/$(NAME)
 
 .PHONY: lint
 lint:
