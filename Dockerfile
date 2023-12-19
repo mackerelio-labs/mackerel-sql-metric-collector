@@ -1,4 +1,4 @@
-FROM golang:1.19 AS build
+FROM golang:1.21 AS build
 WORKDIR /app
 COPY . /app
 RUN make NAME=mackerel-sql-metric-collector
