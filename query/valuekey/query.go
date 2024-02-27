@@ -21,12 +21,13 @@ var commandExecRE = regexp.MustCompile(`\A\$\((.*)\)\z`)
 
 // Query represents ...
 type Query struct {
-	KeyPrefix string            `yaml:"keyPrefix"`
-	ValueKey  map[string]string `yaml:"valueKey"`
-	SQL       string            `yaml:"sql"`
-	Params    []interface{}     `yaml:"params"`
-	Service   string            `yaml:"service,omitempty"`
-	Time      string            `yaml:"time"`
+	KeyPrefix    string             `yaml:"keyPrefix"`
+	ValueKey     map[string]string  `yaml:"valueKey"`
+	DefaultValue map[string]float64 `yaml:"defaultValue,omitempty"`
+	SQL          string             `yaml:"sql"`
+	Params       []interface{}      `yaml:"params"`
+	Service      string             `yaml:"service,omitempty"`
+	Time         string             `yaml:"time"`
 }
 
 // Execute is ...
@@ -47,6 +48,16 @@ func (q *Query) ExecuteWithContext(ctx context.Context, db *sql.DB, logger logr.
 	now := nowFunc().Unix()
 
 	for _, r := range rows {
+		defaults := make(map[string]float64, len(q.DefaultValue))
+		for k, v := range q.DefaultValue {
+			vk, err := replaceValueKey(k, r)
+			if err != nil {
+				logger.Info(err.Error(), "query", q)
+				continue
+			}
+			defaults[vk] = v
+		}
+
 		for k, v := range q.ValueKey {
 			var err error
 
@@ -61,7 +72,11 @@ func (q *Query) ExecuteWithContext(ctx context.Context, db *sql.DB, logger logr.
 				return nil, fmt.Errorf("%q not exists in columns", v)
 			}
 			if value == nil {
-				continue
+				defaultValue, ok := defaults[vk]
+				if !ok {
+					continue
+				}
+				value = defaultValue
 			}
 
 			if q.KeyPrefix != "" {
