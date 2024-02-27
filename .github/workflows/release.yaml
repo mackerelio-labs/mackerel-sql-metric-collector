@@ -58,6 +58,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
+          provenance: false
           context: .
           file: Dockerfile
           platforms: |
