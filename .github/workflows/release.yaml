@@ -51,6 +51,9 @@ jobs:
       - name: Get version from tag
         id: get-version
         run: echo "VERSION=${GITHUB_REF/regs\/tags\//}" >> "$GITHUB_OUTPUT"
+      - name: Get short sha
+        id: short-sha
+        run: echo "GIT_SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_OUTPUT"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -61,6 +64,8 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
+          build-args: |
+            GIT_REVISION=${{ steps.short-sha.outputs.GIT_SHORT_SHA }}
           tags: |
             public.ecr.aws/mackerel/mackerel-sql-metric-collector:latest
             public.ecr.aws/mackerel/mackerel-sql-metric-collector:${{ steps.get-version.outputs.VERSION }}
