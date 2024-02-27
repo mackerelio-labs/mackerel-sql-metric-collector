@@ -48,9 +48,15 @@ jobs:
         env:
           AWS_REGION: us-east-1
 
-      - name: Get version from tag
-        id: get-version
-        run: echo "VERSION=${GITHUB_REF/regs\/tags\//}" >> "$GITHUB_OUTPUT"
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            public.ecr.aws/mackerel/mackerel-sql-metric-collector
+          tags: |
+            type=semver,pattern={{raw}}
+
       - name: Get short sha
         id: short-sha
         run: echo "GIT_SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_OUTPUT"
@@ -66,6 +72,5 @@ jobs:
             linux/arm64
           build-args: |
             GIT_REVISION=${{ steps.short-sha.outputs.GIT_SHORT_SHA }}
-          tags: |
-            public.ecr.aws/mackerel/mackerel-sql-metric-collector:latest
-            public.ecr.aws/mackerel/mackerel-sql-metric-collector:${{ steps.get-version.outputs.VERSION }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
