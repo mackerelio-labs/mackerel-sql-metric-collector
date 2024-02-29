@@ -44,20 +44,22 @@ func (q *Query) ExecuteWithContext(ctx context.Context, db *sql.DB, logger logr.
 		return nil, err
 	}
 
-	metrics := make([]*mackerel.MetricValue, 0, len(q.ValueKey))
+	metricCap := max(len(q.ValueKey), len(q.DefaultValue))
+	metrics := make([]*mackerel.MetricValue, 0, metricCap)
+	metricNames := make(map[string]struct{}, metricCap)
 	now := nowFunc().Unix()
 
 	for _, r := range rows {
-		defaults := make(map[string]float64, len(q.DefaultValue))
+		vs := make(map[string]any, metricCap)
+
 		for k, v := range q.DefaultValue {
 			vk, err := replaceValueKey(k, r)
 			if err != nil {
 				logger.Info(err.Error(), "query", q)
 				continue
 			}
-			defaults[vk] = v
+			vs[vk] = v
 		}
-
 		for k, v := range q.ValueKey {
 			var err error
 
@@ -72,35 +74,43 @@ func (q *Query) ExecuteWithContext(ctx context.Context, db *sql.DB, logger logr.
 				return nil, fmt.Errorf("%q not exists in columns", v)
 			}
 			if value == nil {
-				defaultValue, ok := defaults[vk]
-				if !ok {
-					continue
-				}
-				value = defaultValue
+				continue
 			}
+			vs[vk] = value
 
 			if q.KeyPrefix != "" {
 				vk = fmt.Sprintf("%s.%s", q.KeyPrefix, vk)
 			}
+		}
 
-			t := now
-			if q.Time != "" {
-				value, ok := r[q.Time]
-				if !ok {
-					return nil, fmt.Errorf("%q not exists in columns", q.Time)
-				}
-				t, ok = value.(int64)
-				if !ok {
-					return nil, fmt.Errorf("failed to convert %q to int64", q.Time)
-				}
+		t := now
+		if q.Time != "" {
+			value, ok := r[q.Time]
+			if !ok {
+				return nil, fmt.Errorf("%q not exists in columns", q.Time)
+			}
+			t, ok = value.(int64)
+			if !ok {
+				return nil, fmt.Errorf("failed to convert %q to int64", q.Time)
+			}
+		}
+		for k, v := range vs {
+			name := k
+			if q.KeyPrefix != "" {
+				name = fmt.Sprintf("%s.%s", q.KeyPrefix, name)
+			}
+
+			if _, has := metricNames[name]; has {
+				continue
+			} else {
+				metricNames[name] = struct{}{}
 			}
 
 			mv := mackerel.MetricValue{
-				Name:  vk,
-				Value: value,
+				Name:  name,
+				Value: v,
 				Time:  t,
 			}
-
 			metrics = append(metrics, &mv)
 		}
 	}

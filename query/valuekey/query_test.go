@@ -4,6 +4,8 @@ import (
 	"io"
 	"log"
 	"os"
+	"slices"
+	"strings"
 	"testing"
 	"time"
 
@@ -95,6 +97,30 @@ func TestQueryExecute(t *testing.T) {
 				},
 			},
 		},
+		"defaultValue_non_exist_key": {
+			query: &Query{
+				KeyPrefix: "agent",
+				ValueKey: map[string]string{
+					"versions.#{agent_version}": "host_num",
+				},
+				DefaultValue: map[string]float64{
+					"versions.0_2_0": 1.0,
+				},
+				SQL: "SELECT * FROM dummy",
+			},
+			want: []*mackerel.MetricValue{
+				{
+					Name:  "agent.versions.0_1_0",
+					Time:  nowFunc().Unix(),
+					Value: int64(10),
+				},
+				{
+					Name:  "agent.versions.0_2_0",
+					Time:  nowFunc().Unix(),
+					Value: float64(1.0),
+				},
+			},
+		},
 	}
 
 	for name, tc := range testCases {
@@ -120,6 +146,9 @@ func TestQueryExecute(t *testing.T) {
 			if err := mock.ExpectationsWereMet(); err != nil {
 				t.Errorf("ExpectationsWereMet: got %v", err)
 			}
+			slices.SortStableFunc(values, func(a, b *mackerel.MetricValue) int {
+				return strings.Compare(a.Name, b.Name)
+			})
 			if diff := cmp.Diff(tc.want, values); diff != "" {
 				t.Errorf("Execute: (-want, +got)\n%s", diff)
 			}
