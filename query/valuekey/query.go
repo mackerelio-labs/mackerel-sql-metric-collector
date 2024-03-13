@@ -77,10 +77,6 @@ func (q *Query) ExecuteWithContext(ctx context.Context, db *sql.DB, logger logr.
 				continue
 			}
 			vs[vk] = value
-
-			if q.KeyPrefix != "" {
-				vk = fmt.Sprintf("%s.%s", q.KeyPrefix, vk)
-			}
 		}
 
 		t := now
