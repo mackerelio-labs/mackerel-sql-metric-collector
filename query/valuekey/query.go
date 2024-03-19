@@ -21,12 +21,13 @@ var commandExecRE = regexp.MustCompile(`\A\$\((.*)\)\z`)
 
 // Query represents ...
 type Query struct {
-	KeyPrefix string            `yaml:"keyPrefix"`
-	ValueKey  map[string]string `yaml:"valueKey"`
-	SQL       string            `yaml:"sql"`
-	Params    []interface{}     `yaml:"params"`
-	Service   string            `yaml:"service,omitempty"`
-	Time      string            `yaml:"time"`
+	KeyPrefix    string             `yaml:"keyPrefix"`
+	ValueKey     map[string]string  `yaml:"valueKey"`
+	DefaultValue map[string]float64 `yaml:"defaultValue,omitempty"`
+	SQL          string             `yaml:"sql"`
+	Params       []interface{}      `yaml:"params"`
+	Service      string             `yaml:"service,omitempty"`
+	Time         string             `yaml:"time"`
 }
 
 // Execute is ...
@@ -43,10 +44,22 @@ func (q *Query) ExecuteWithContext(ctx context.Context, db *sql.DB, logger logr.
 		return nil, err
 	}
 
-	metrics := make([]*mackerel.MetricValue, 0, len(q.ValueKey))
+	metricCap := max(len(q.ValueKey), len(q.DefaultValue))
+	metrics := make([]*mackerel.MetricValue, 0, metricCap)
+	metricNames := make(map[string]struct{}, metricCap)
 	now := nowFunc().Unix()
 
 	for _, r := range rows {
+		vs := make(map[string]any, metricCap)
+
+		for k, v := range q.DefaultValue {
+			vk, err := replaceValueKey(k, r)
+			if err != nil {
+				logger.Info(err.Error(), "query", q)
+				continue
+			}
+			vs[vk] = v
+		}
 		for k, v := range q.ValueKey {
 			var err error
 
@@ -63,29 +76,37 @@ func (q *Query) ExecuteWithContext(ctx context.Context, db *sql.DB, logger logr.
 			if value == nil {
 				continue
 			}
+			vs[vk] = value
+		}
 
+		t := now
+		if q.Time != "" {
+			value, ok := r[q.Time]
+			if !ok {
+				return nil, fmt.Errorf("%q not exists in columns", q.Time)
+			}
+			t, ok = value.(int64)
+			if !ok {
+				return nil, fmt.Errorf("failed to convert %q to int64", q.Time)
+			}
+		}
+		for k, v := range vs {
+			name := k
 			if q.KeyPrefix != "" {
-				vk = fmt.Sprintf("%s.%s", q.KeyPrefix, vk)
+				name = fmt.Sprintf("%s.%s", q.KeyPrefix, name)
 			}
 
-			t := now
-			if q.Time != "" {
-				value, ok := r[q.Time]
-				if !ok {
-					return nil, fmt.Errorf("%q not exists in columns", q.Time)
-				}
-				t, ok = value.(int64)
-				if !ok {
-					return nil, fmt.Errorf("failed to convert %q to int64", q.Time)
-				}
+			if _, has := metricNames[name]; has {
+				continue
+			} else {
+				metricNames[name] = struct{}{}
 			}
 
 			mv := mackerel.MetricValue{
-				Name:  vk,
-				Value: value,
+				Name:  name,
+				Value: v,
 				Time:  t,
 			}
-
 			metrics = append(metrics, &mv)
 		}
 	}
