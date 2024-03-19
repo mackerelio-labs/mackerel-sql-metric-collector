@@ -44,7 +44,7 @@ var methods = map[reflect.Kind]string{
 }
 
 // Flags returns a pointer to flag.FlagSet that sets option values to corresponding to opts.
-func Flags(name string, opts interface{}) (*flag.FlagSet, error) {
+func Flags(name string, opts any) (*flag.FlagSet, error) {
 	c := flag.NewFlagSet(name, flag.ContinueOnError)
 	p := reflect.ValueOf(opts)
 	for i, field := range reflect.VisibleFields(p.Elem().Type()) {

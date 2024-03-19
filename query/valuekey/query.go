@@ -25,7 +25,7 @@ type Query struct {
 	ValueKey     map[string]string  `yaml:"valueKey"`
 	DefaultValue map[string]float64 `yaml:"defaultValue,omitempty"`
 	SQL          string             `yaml:"sql"`
-	Params       []interface{}      `yaml:"params"`
+	Params       []any              `yaml:"params"`
 	Service      string             `yaml:"service,omitempty"`
 	Time         string             `yaml:"time"`
 }
@@ -119,7 +119,7 @@ func (q *Query) GetService() string {
 	return q.Service
 }
 
-type dbRow map[string]interface{}
+type dbRow map[string]any
 
 func (q *Query) queryDBWithContext(ctx context.Context, db *sql.DB) ([]dbRow, error) {
 	params, err := evalParams(q.Params)
@@ -141,8 +141,8 @@ func (q *Query) queryDBWithContext(ctx context.Context, db *sql.DB) ([]dbRow, er
 	var results []dbRow
 
 	for rows.Next() {
-		var row = make([]interface{}, len(cols))
-		var rowp = make([]interface{}, len(cols)) // Slice pointer to each column of row (row[i]).
+		var row = make([]any, len(cols))
+		var rowp = make([]any, len(cols)) // Slice pointer to each column of row (row[i]).
 		for i := 0; i < len(row); i++ {
 			rowp[i] = &row[i]
 		}
@@ -177,8 +177,8 @@ func (q *Query) queryDBWithContext(ctx context.Context, db *sql.DB) ([]dbRow, er
 	return results, nil
 }
 
-func evalParams(params []interface{}) ([]interface{}, error) {
-	evaluated := make([]interface{}, len(params))
+func evalParams(params []any) ([]any, error) {
+	evaluated := make([]any, len(params))
 
 	for i, p := range params {
 		v, ok := p.(string)
