@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
+permissions:
+  contents: read
+  id-token: write
+  packages: write
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
@@ -54,6 +58,13 @@ jobs:
         env:
           AWS_REGION: us-east-1
 
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
@@ -61,6 +72,7 @@ jobs:
           images: |
             public.ecr.aws/mackerel/mackerel-sql-metric-collector
             mackerel/mackerel-sql-metric-collector
+            ghcr.io/${{ github.repository_owner }}/mackerel-sql-metric-collector
           tags: |
             type=semver,pattern={{raw}}
 
