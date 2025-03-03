@@ -1,4 +1,5 @@
 ---
+version: 2
 project_name: mackerel-sql-metric-collector
 before:
   hooks:
@@ -24,7 +25,8 @@ archives:
       {{- else }}{{- .Arch }}{{- if .Arm }}v{{ .Arm }}{{ end }}{{ end }}
     format_overrides:
       - goos: windows
-        format: zip
+        formats:
+          - "zip"
 release:
   prerelease: auto
   draft: true
