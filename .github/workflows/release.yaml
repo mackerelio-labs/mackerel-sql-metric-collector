@@ -30,9 +30,6 @@ jobs:
 
   build-and-push:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
