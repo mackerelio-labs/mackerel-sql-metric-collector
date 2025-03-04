@@ -85,9 +85,17 @@ DB からメトリックを収集して Mackerel のサービスメトリック�
 
 ## コンテナイメージの取得方法
 
-Amazon ECR Public Gallery にて公開しております。以下のようなコマンドでコンテナイメージを取得することができます。
+Docker Hub、Amazon ECR Public Gallery、GitHub Packages Container registry にて公開しております。以下のようなコマンドでコンテナイメージを取得することができます。
+
+```
+docker pull mackerel/mackerel-sql-metric-collector:latest
+```
 
 ```
 docker pull public.ecr.aws/mackerel/mackerel-sql-metric-collector:latest
+```
+
+```
+docker pull ghcr.io/mackerelio-labs/mackerel-sql-metric-collector:latest
 ```
 
