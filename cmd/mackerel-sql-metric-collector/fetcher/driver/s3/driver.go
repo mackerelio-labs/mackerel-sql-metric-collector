@@ -68,6 +68,8 @@ func createS3Client(ctx context.Context, bucket, regionHint string) (*manager.Do
 func fetchFromS3(ctx context.Context, client *manager.Downloader, bucket, key string) ([]byte, error) {
 	buf := manager.NewWriteAtBuffer([]byte{})
 
+	key = strings.TrimPrefix(key, "/")
+
 	_, err := client.Download(ctx, buf, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
