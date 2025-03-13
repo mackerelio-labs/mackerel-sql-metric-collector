@@ -1,8 +1,6 @@
 module github.com/mackerelio-labs/mackerel-sql-metric-collector
 
-go 1.22
-
-toolchain go1.24.0
+go 1.24.0
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
