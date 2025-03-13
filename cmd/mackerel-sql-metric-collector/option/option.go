@@ -73,7 +73,7 @@ func Flags(name string, opts any) (*flag.FlagSet, error) {
 
 		// Otherwise, if a type that is implements flag.Value interface, can use flag.Var function.
 		iface := reflect.TypeOf((*flag.Value)(nil)).Elem()
-		if reflect.PtrTo(field.Type).Implements(iface) {
+		if reflect.PointerTo(field.Type).Implements(iface) {
 			v := reflect.ValueOf(c)
 			m := v.MethodByName("Var")
 			m.Call([]reflect.Value{
