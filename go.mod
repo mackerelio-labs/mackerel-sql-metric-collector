@@ -12,14 +12,14 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.57.2
 	github.com/go-logr/logr v1.4.2
 	github.com/go-logr/stdr v1.2.2
-	github.com/go-logr/zapr v1.2.3
+	github.com/go-logr/zapr v1.3.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/google/go-cmp v0.7.0
 	github.com/lib/pq v1.9.0
 	github.com/mackerelio/mackerel-client-go v0.35.0
 	github.com/mattn/go-sqlite3 v1.14.5
 	github.com/speee/go-athena v1.0.3
-	go.uber.org/zap v1.19.0
+	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.12.0
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/bigquery v1.2.0
@@ -72,8 +72,7 @@ require (
 	go.opentelemetry.io/otel v1.35.0 // indirect
 	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
-	go.uber.org/atomic v1.7.0 // indirect
-	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394 // indirect
 	golang.org/x/mod v0.24.0 // indirect
