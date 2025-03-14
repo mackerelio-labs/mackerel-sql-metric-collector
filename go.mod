@@ -15,7 +15,7 @@ require (
 	github.com/go-logr/zapr v1.3.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/google/go-cmp v0.7.0
-	github.com/lib/pq v1.9.0
+	github.com/lib/pq v1.10.9
 	github.com/mackerelio/mackerel-client-go v0.35.0
 	github.com/mattn/go-sqlite3 v1.14.24
 	github.com/speee/go-athena v1.0.4
