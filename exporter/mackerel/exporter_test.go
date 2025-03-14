@@ -18,7 +18,7 @@ func TestExporterExport(t *testing.T) {
 			http.Error(w, r.URL.Path, http.StatusBadRequest)
 			return
 		}
-		w.Write([]byte("OK")) // nolint
+		w.Write([]byte(`{"success": true}`)) // nolint
 	}))
 	t.Cleanup(s.Close)
 

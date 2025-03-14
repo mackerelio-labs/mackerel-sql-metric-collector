@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:1.21 AS build
+FROM --platform=$BUILDPLATFORM golang:1.24 AS build
 ARG GIT_REVISION
 ARG TARGETOS
 ARG TARGETARCH
@@ -8,7 +8,7 @@ COPY . /app
 RUN --mount=type=cache,sharing=locked,target=/go/pkg/mod/ \
     GOOS=${TARGETOS} GOARCH=${TARGETARCH} make GIT_REVISION=${GIT_REVISION} NAME=mackerel-sql-metric-collector
 
-FROM gcr.io/distroless/static-debian11:nonroot
+FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=build --chown=nonroot:nonroot /app/bin/mackerel-sql-metric-collector /
 WORKDIR /
 ENTRYPOINT ["/mackerel-sql-metric-collector"]
