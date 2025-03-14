@@ -5,10 +5,10 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 
 	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/fetcher"
 )
@@ -50,22 +50,27 @@ func resolveRegionHint(u *url.URL) string {
 	return defaultRegionHint
 }
 
-func createS3Client(ctx context.Context, bucket, regionHint string) (*s3manager.Downloader, error) {
-	sess := session.Must(session.NewSession())
-
-	r, err := s3manager.GetBucketRegion(ctx, sess, bucket, regionHint)
+func createS3Client(ctx context.Context, bucket, regionHint string) (*manager.Downloader, error) {
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(regionHint))
 	if err != nil {
 		return nil, err
 	}
-	sess.Config.Region = aws.String(r)
 
-	return s3manager.NewDownloader(sess), nil
+	r, err := manager.GetBucketRegion(ctx, s3.NewFromConfig(cfg), bucket)
+	if err != nil {
+		return nil, err
+	}
+	cfg.Region = r
+
+	return manager.NewDownloader(s3.NewFromConfig(cfg)), nil
 }
 
-func fetchFromS3(ctx context.Context, client *s3manager.Downloader, bucket, key string) ([]byte, error) {
-	buf := &aws.WriteAtBuffer{}
+func fetchFromS3(ctx context.Context, client *manager.Downloader, bucket, key string) ([]byte, error) {
+	buf := manager.NewWriteAtBuffer([]byte{})
 
-	_, err := client.Download(buf, &s3.GetObjectInput{
+	key = strings.TrimPrefix(key, "/")
+
+	_, err := client.Download(ctx, buf, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})

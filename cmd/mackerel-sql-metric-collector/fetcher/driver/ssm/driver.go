@@ -5,9 +5,9 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
 
 	"github.com/mackerelio-labs/mackerel-sql-metric-collector/cmd/mackerel-sql-metric-collector/fetcher"
 )
@@ -39,7 +39,12 @@ func (d *Driver) FetchWithContext(ctx context.Context, u *url.URL) ([]byte, erro
 		return nil, err
 	}
 
-	return fetchFromSSM(ctx, createSSMClient(r), u.Path, wd)
+	client, err := createSSMClient(ctx, r)
+	if err != nil {
+		return nil, err
+	}
+
+	return fetchFromSSM(ctx, client, u.Path, wd)
 }
 
 func resolveRegion(values url.Values) string {
@@ -62,14 +67,17 @@ func resolveWithDecryption(values url.Values) (bool, error) {
 	return wd, nil
 }
 
-func createSSMClient(region string) *ssm.SSM {
-	sess := session.Must(session.NewSession())
-	sess.Config.Region = aws.String(region)
-	return ssm.New(sess)
+func createSSMClient(ctx context.Context, region string) (*ssm.Client, error) {
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(region))
+	if err != nil {
+		return nil, err
+	}
+
+	return ssm.NewFromConfig(cfg), nil
 }
 
-func fetchFromSSM(ctx context.Context, client *ssm.SSM, name string, withDecryption bool) ([]byte, error) {
-	res, err := client.GetParameterWithContext(ctx, &ssm.GetParameterInput{
+func fetchFromSSM(ctx context.Context, client *ssm.Client, name string, withDecryption bool) ([]byte, error) {
+	res, err := client.GetParameter(ctx, &ssm.GetParameterInput{
 		Name:           aws.String(name),
 		WithDecryption: aws.Bool(withDecryption),
 	})
