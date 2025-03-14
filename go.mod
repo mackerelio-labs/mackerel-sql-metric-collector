@@ -13,7 +13,7 @@ require (
 	github.com/go-logr/logr v1.4.2
 	github.com/go-logr/stdr v1.2.2
 	github.com/go-logr/zapr v1.3.0
-	github.com/go-sql-driver/mysql v1.5.0
+	github.com/go-sql-driver/mysql v1.9.0
 	github.com/google/go-cmp v0.7.0
 	github.com/lib/pq v1.10.9
 	github.com/mackerelio/mackerel-client-go v0.35.0
@@ -32,6 +32,7 @@ require (
 	cloud.google.com/go/bigquery v1.66.2 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
 	cloud.google.com/go/iam v1.4.2 // indirect
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/apache/arrow/go/v15 v15.0.2 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.10 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.62 // indirect
