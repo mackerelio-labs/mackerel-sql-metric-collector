@@ -68,7 +68,7 @@ DB からメトリックを収集して Mackerel のサービスメトリック�
 - keyPrefix: "users"
   service: "other_service" # 投稿先のサービスを --default-service とは別にしたい場合に定義します
   valueKey:
-    "status.#{status}": "user_num" # クエリ結果をメトリック名に使用する
+    "status.#{status}": "user_num" # クエリ結果をメトリック名に使用します
   sql: |-
     SELECT
       status,
@@ -81,6 +81,20 @@ DB からメトリックを収集して Mackerel のサービスメトリック�
     GROUP BY status
   params: # プレースホルダのパラメータ値を指定します
     - false
+- keyPrefix: "users"
+  valueKey:
+    "count.#{status}": "user_num"
+  defaultValue:
+    "count.pending": 0 # 値がなかったときに投稿するメトリックを指定します
+  sql: |-
+    SELECT
+      COUNT(id) AS user_num,
+      status
+    FROM
+      users
+    WHERE
+      created_at >= current_timestamp - INTERVAL '30 DAYS'
+    GROUP BY status
 ```
 
 ## コンテナイメージの取得方法
