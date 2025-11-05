@@ -44,7 +44,7 @@ func (c *Collector) RunWithContext(ctx context.Context, queries []query.Query) e
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer db.Close() // nolint
 
 	queue := make(chan struct{}, c.config.MaxConcurrency-1)
 
