@@ -62,7 +62,7 @@ func printValue(w io.Writer, metric *mackerel.MetricValue) error {
 		return fmt.Errorf("invalid metric.Value: key = %s, metric.Value = (%T)%v", metric.Name, metric.Value, metric.Value)
 	}
 
-	fmt.Fprintf(w, "%s\t%f\t%d\n", metric.Name, v, metric.Time)
+	fmt.Fprintf(w, "%s\t%f\t%d\n", metric.Name, v, metric.Time) // nolint
 
 	return nil
 }

@@ -131,7 +131,7 @@ func (q *Query) queryDBWithContext(ctx context.Context, db *sql.DB) ([]dbRow, er
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer rows.Close() // nolint
 
 	cols, err := rows.Columns()
 	if err != nil {

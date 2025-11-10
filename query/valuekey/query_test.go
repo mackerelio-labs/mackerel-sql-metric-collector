@@ -133,7 +133,7 @@ func TestQueryExecute(t *testing.T) {
 				t.Fatal("sqlmock.New: ", err)
 			}
 			t.Cleanup(func() {
-				db.Close()
+				db.Close() // nolint
 			})
 			columns := []string{"agent_version", "host_num"}
 			rows := sqlmock.NewRows(columns).AddRow("0.1.0", 10).AddRow("0.1.1", nil).AddRow("0.1.2", nil)
